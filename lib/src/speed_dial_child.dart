@@ -8,9 +8,6 @@ class SpeedDialChild {
   /// The style of the label
   final TextStyle labelStyle;
 
-  /// The background color of the label
-  final Color labelBackgroundColor;
-
   /// If this is provided it will replace the default widget, therefore [label],
   /// [labelStyle] and [labelBackgroundColor] should be null
   final Widget labelWidget;
@@ -25,7 +22,6 @@ class SpeedDialChild {
   SpeedDialChild({
     this.label,
     this.labelStyle,
-    this.labelBackgroundColor,
     this.labelWidget,
     this.child,
     this.backgroundColor,

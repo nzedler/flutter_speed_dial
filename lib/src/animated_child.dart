@@ -9,7 +9,6 @@ class AnimatedChild extends AnimatedWidget {
 
   final String label;
   final TextStyle labelStyle;
-  final Color labelBackgroundColor;
   final Widget labelWidget;
 
   final bool visible;
@@ -28,7 +27,6 @@ class AnimatedChild extends AnimatedWidget {
     this.child,
     this.label,
     this.labelStyle,
-    this.labelBackgroundColor,
     this.labelWidget,
     this.visible = false,
     this.onTap,

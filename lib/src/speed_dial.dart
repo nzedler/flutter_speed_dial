@@ -10,12 +10,6 @@ class SpeedDial extends StatefulWidget {
   /// Children buttons, from the lowest to the highest.
   final List<SpeedDialChild> children;
 
-  /// Used to get the button hidden on scroll. See examples for more info.
-  final bool visible;
-
-  /// The curve used to animate the button on scrolling.
-  final Curve curve;
-
   final String tooltip;
   final String heroTag;
   final Color backgroundColor;
@@ -33,10 +27,10 @@ class SpeedDial extends StatefulWidget {
   final double overlayOpacity;
 
   /// The animated icon to show as the main button child. If this is provided the [child] is ignored.
-  final AnimatedIconData animatedIcon;
+  final Widget iconBeforePress;
 
   /// The theme for the animated icon.
-  final IconThemeData animatedIconTheme;
+  final Widget iconAfterPress;
 
   /// The child of the main button, ignored if [animatedIcon] is non [null].
   final Widget child;
@@ -54,11 +48,10 @@ class SpeedDial extends StatefulWidget {
   final bool closeManually;
 
   /// The speed of the animation
-  final int animationSpeed;
+  final Duration animationDuration;
 
   SpeedDial({
     this.children = const [],
-    this.visible = true,
     this.backgroundColor,
     this.foregroundColor,
     this.elevation = 6.0,
@@ -66,8 +59,8 @@ class SpeedDial extends StatefulWidget {
     this.overlayColor = Colors.white,
     this.tooltip,
     this.heroTag,
-    this.animatedIcon,
-    this.animatedIconTheme,
+    this.iconBeforePress,
+    this.iconAfterPress,
     this.child,
     this.marginBottom = 16,
     this.marginRight = 16,
@@ -75,9 +68,8 @@ class SpeedDial extends StatefulWidget {
     this.onClose,
     this.closeManually = false,
     this.shape = const CircleBorder(),
-    this.curve = Curves.linear,
     this.onPress,
-    this.animationSpeed = 150
+    this.animationDuration = const Duration(milliseconds: 150),
   });
 
   @override
@@ -93,13 +85,10 @@ class _SpeedDialState extends State<SpeedDial> with SingleTickerProviderStateMix
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: _calculateMainControllerDuration(),
+      duration: widget.animationDuration,
       vsync: this,
     );
   }
-
-  Duration _calculateMainControllerDuration() =>
-      Duration(milliseconds: widget.animationSpeed + widget.children.length * (widget.animationSpeed / 5).round());
 
   @override
   void dispose() {
@@ -119,7 +108,7 @@ class _SpeedDialState extends State<SpeedDial> with SingleTickerProviderStateMix
   @override
   void didUpdateWidget(SpeedDial oldWidget) {
     if (oldWidget.children.length != widget.children.length) {
-      _controller.duration = _calculateMainControllerDuration();
+      _controller.duration = widget.animationDuration;
     }
 
     super.didUpdateWidget(oldWidget);
@@ -159,7 +148,6 @@ class _SpeedDialState extends State<SpeedDial> with SingleTickerProviderStateMix
             child: child.child,
             label: child.label,
             labelStyle: child.labelStyle,
-            labelBackgroundColor: child.labelBackgroundColor,
             labelWidget: child.labelWidget,
             onTap: child.onTap,
             toggleChildren: () {
@@ -192,29 +180,18 @@ class _SpeedDialState extends State<SpeedDial> with SingleTickerProviderStateMix
   }
 
   Widget _renderButton() {
-    var child = widget.animatedIcon != null
-        ? AnimatedIcon(
-            icon: widget.animatedIcon,
-            progress: _controller,
-            color: widget.animatedIconTheme?.color,
-            size: widget.animatedIconTheme?.size,
-          )
-        : widget.child;
-
     var fabChildren = _getChildrenList();
 
     var animatedFloatingButton = AnimatedFloatingButton(
-      visible: widget.visible,
       tooltip: widget.tooltip,
-      backgroundColor: widget.backgroundColor,
-      foregroundColor: widget.foregroundColor,
+      colorBeforePress: widget.backgroundColor,
+      colorAfterPress: widget.foregroundColor,
       elevation: widget.elevation,
-      onLongPress: _toggleChildren,
-      callback: (_open || widget.onPress == null) ? _toggleChildren : widget.onPress,
-      child: child,
+      onPressed: (_open || widget.onPress == null) ? _toggleChildren : widget.onPress,
       heroTag: widget.heroTag,
       shape: widget.shape,
-      curve: widget.curve,
+      iconBeforePress: widget.iconBeforePress,
+      iconAfterPress: widget.iconAfterPress,
     );
 
     return Positioned(
