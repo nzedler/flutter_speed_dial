@@ -51,7 +51,7 @@ class AnimatedChild extends AnimatedWidget {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 8.0),
         margin: EdgeInsets.only(right: 18.0),
-        decoration: BoxDecoration(
+        /*decoration: BoxDecoration(
           color: labelBackgroundColor ?? Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(6.0)),
           boxShadow: [
@@ -61,7 +61,7 @@ class AnimatedChild extends AnimatedWidget {
               blurRadius: 2.4,
             )
           ],
-        ),
+        ),*/
         child: Text(label, style: labelStyle),
       ),
     );
